@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#030712">
+    <title>Paz | Tu Mejor Versión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        number: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            950: '#030712',
+                            900: '#0B0F19',
+                            850: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            overscroll-behavior-y: contain;
+        }
+
+        .number-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes waterFlow {
+            0% { transform: translate(0%, 0%) scale(1) rotate(0deg); opacity: 0.65; }
+            33% { transform: translate(4%, -5%) scale(1.1) rotate(120deg); opacity: 0.85; }
+            66% { transform: translate(-5%, 4%) scale(0.92) rotate(240deg); opacity: 0.7; }
+            100% { transform: translate(0%, 0%) scale(1) rotate(360deg); opacity: 0.65; }
+        }
+
+        @keyframes pulseWaterRing {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.03); filter: brightness(1.2); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-water-aura {
+            animation: waterFlow 24s ease-in-out infinite alternate;
+            will-change: transform, opacity;
+        }
+
+        .animate-ring-pulse {
+            animation: pulseWaterRing 8s ease-in-out infinite;
+            will-change: transform, filter;
+        }
+
+        .animate-pop-in {
+            animation: popIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .aura-transition {
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .smooth-scale {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(28px) saturate(140%);
+            -webkit-backdrop-filter: blur(28px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .calendar-day-active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #030712;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.35);
+        }
+
+        .calendar-day-today {
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .safe-pb {
+            padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+        }
+
+        .safe-pt {
+            padding-top: max(0.75rem, env(safe-area-inset-top));
+        }
+
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col justify-between select-none relative">
+
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        <div id="bgWater1" class="absolute -top-1/4 -left-1/4 w-[35rem] h-[35rem] bg-cyan-950/30 rounded-[40%] blur-[120px] animate-water-aura aura-transition"></div>
+        <div id="bgWater2" class="absolute -bottom-1/4 -right-1/4 w-[32rem] h-[32rem] bg-slate-800/20 rounded-[45%] blur-[130px] aura-transition"></div>
+        <div id="bgWater3" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] bg-teal-950/20 rounded-[50%] blur-[110px] animate-water-aura aura-transition" style="animation-delay: -10s;"></div>
+    </div>
+
+    <header class="w-full max-w-md mx-auto px-4 safe-pt pt-3 pb-1 relative z-10 shrink-0">
+        <div class="flex items-center justify-between gap-2 p-2 rounded-2xl glass-panel border border-white/5">
+            <div class="flex items-center gap-2 pl-1">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-white/10 flex items-center justify-center text-cyan-300 shadow-inner">
+                    <i class="fa-solid fa-water text-xs"></i>
+                </div>
+                <div>
+                    <h1 class="text-xs font-semibold tracking-wide text-slate-100 flex items-center gap-1 leading-none">
+                        <span>Paz</span>
+                        <span class="text-[8px] px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono">APP</span>
+                    </h1>
+                    <span class="text-[8px] text-slate-400 font-medium tracking-widest uppercase">Evolución Consciente</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-1">
+                <button id="btnToggleSound" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-400 hover:text-cyan-300 transition cursor-pointer text-xs flex items-center justify-center" aria-label="Sonido">
+                    <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+                </button>
+
+                <button id="btnOpenStreaks" class="py-1 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-300 transition cursor-pointer text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-layer-group text-[9px] text-cyan-400"></i>
+                    <span id="currentStreakBadge" class="truncate max-w-[70px] font-medium text-[11px]">Mi Meta</span>
+                    <i class="fa-solid fa-chevron-down text-[8px] text-slate-500"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-md mx-auto flex-1 px-4 py-2 relative z-10 overflow-y-auto flex flex-col justify-center">
+        
+        <section id="tabCounter" class="tab-view space-y-3 my-auto animate-pop-in">
+            <div class="glass-panel rounded-2xl p-3 text-center relative border border-white/10">
+                <div class="flex items-center justify-between text-[8px] font-semibold uppercase tracking-[0.2em] text-cyan-400/90 mb-1">
+                    <span class="flex items-center gap-1">
+                        <i class="fa-solid fa-sparkles"></i> Inspiración Diaria
+                    </span>
+                    <button id="btnRefreshQuote" class="text-slate-500 hover:text-cyan-300 p-0.5 cursor-pointer" aria-label="Cambiar frase">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+                <p id="dailyQuoteText" class="text-slate-200 text-xs font-light italic leading-snug">
+                    "Cargando frase diaria..."
+                </p>
+                <span id="dailyQuoteAuthor" class="text-[9px] font-medium text-slate-400 block mt-0.5">— Autor</span>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-5 text-center relative overflow-hidden flex flex-col items-center shadow-2xl">
+                <div class="w-full flex items-center justify-between mb-1 px-1">
+                    <div class="flex-1 flex items-center justify-center gap-1.5 group cursor-pointer pl-5">
+                        <h2 id="counterTitle" class="text-base font-light tracking-wide text-slate-100 outline-none border-b border-transparent focus:border-slate-500 px-1 rounded-lg transition" contenteditable="true">
+                            Mi Racha Actual
+                        </h2>
+                        <i class="fa-solid fa-pen text-[9px] text-slate-600"></i>
+                    </div>
+                    <button id="btnOpenThemePicker" class="text-slate-500 hover:text-white p-1 text-xs" aria-label="Color del Aura">
+                        <i class="fa-solid fa-palette"></i>
+                    </button>
+                </div>
+
+                <div class="relative my-2 flex items-center justify-center animate-ring-pulse">
+                    <div id="auraGlowBack" class="absolute w-44 h-44 rounded-full blur-3xl opacity-40 aura-transition"></div>
+                    <div id="auraRing" class="aura-transition w-40 h-40 rounded-full p-[3px] relative flex items-center justify-center shadow-2xl">
+                        <div id="auraGradientBg" class="absolute inset-0 rounded-full animate-water-aura aura-transition"></div>
+                        <div class="w-full h-full bg-slate-950/85 rounded-full flex flex-col items-center justify-center relative z-10 border border-white/10 backdrop-blur-2xl p-2">
+                            <span class="text-[8px] font-semibold uppercase tracking-[0.2em] text-slate-400 -mt-1">Días Seguidos</span>
+                            <div id="counterValue" class="number-font text-5xl sm:text-6xl font-extralight text-white leading-none my-1 tracking-tight smooth-scale">
+                                0
+                            </div>
+                            <span id="streakStatus" class="text-[9px] font-medium text-slate-300 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 aura-transition">
+                                Agua Serena
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="todayStatusBadge" class="mb-2 py-1 px-3 rounded-full text-[9px] font-medium bg-white/5 border border-white/10 text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-regular fa-circle-check text-xs"></i>
+                    <span id="todayStatusText">Hoy aún no has registrado progreso</span>
+                </div>
+
+                <div class="w-full space-y-2 mt-1">
+                    <button id="btnIncrement" class="w-full py-3 px-4 rounded-2xl font-semibold text-xs text-white shadow-lg relative overflow-hidden transition active:scale-95 cursor-pointer border border-white/10">
+                        <div id="btnBgGradient" class="absolute inset-0 bg-cyan-800 transition aura-transition"></div>
+                        <div class="relative flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span id="btnIncrementLabel">Marcar Día (+1)</span>
+                        </div>
+                    </button>
+
+                    <div class="flex gap-2">
+                        <button id="btnOpenReflection" class="flex-1 py-2 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl border border-white/10 transition text-xs flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-feather text-[10px] text-cyan-400"></i>
+                            <span>Reflexionar</span>
+                        </button>
+                        <button id="btnReset" class="py-2 px-3 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-slate-200 rounded-xl border border-white/5 transition text-xs flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                            <span>Reiniciar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tabCalendar" class="tab-view space-y-3 hidden animate-pop-in">
+            <div class="glass-panel rounded-3xl p-4 shadow-2xl border border-white/10">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 id="calendarMonthYear" class="text-xs font-semibold text-slate-200 uppercase tracking-widest">
+                            Calendario
+                        </h3>
+                        <span class="text-[9px] text-slate-500">Toca un día para modificar tu registro</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button id="btnTodayMonth" class="px-2 py-1 text-[9px] bg-white/5 text-slate-400 hover:text-white rounded-lg">
+                            Hoy
+                        </button>
+                        <button id="btnPrevMonth" class="p-1.5 text-slate-400 hover:text-white rounded-lg text-xs">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button id="btnNextMonth" class="p-1.5 text-slate-400 hover:text-white rounded-lg text-xs">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-slate-500 mb-1">
+                    <div>Do</div><div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sá</div>
+                </div>
+
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1 text-xs"></div>
+            </div>
+        </section>
+
+        <section id="tabStats" class="tab-view space-y-3 hidden animate-pop-in">
+            <div class="glass-panel rounded-3xl p-4 shadow-2xl border border-white/10 space-y-3">
+                <div class="flex items-center gap-2 pb-2 border-b border-white/5">
+                    <i class="fa-solid fa-chart-line text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-semibold text-white uppercase tracking-wider">Tu Cosecha de Progreso</h3>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="p-3 bg-white/[0.03] border border-white/5 rounded-2xl text-center">
+                        <span class="text-[8px] text-slate-400 uppercase font-semibold">Días Acumulados</span>
+                        <div id="statTotalDays" class="text-2xl font-light text-white number-font">0</div>
+                        <span class="text-[8px] text-cyan-400">Total histórico</span>
+                    </div>
+                    <div class="p-3 bg-white/[0.03] border border-white/5 rounded-2xl text-center">
+                    <span class="text-[8px] text-slate-400 uppercase font-semibold">Mejor Ritmo</span>
+                    <div id="statMaxStreak" class="text-2xl font-light text-cyan-300 number-font">0 d</div>
+                    <span class="text-[8px] text-slate-400">Días seguidos</span>
+                </div>
+            </div>
+
+            <div class="p-3 bg-slate-900/30 border border-white/5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between text-[10px]">
+                    <span class="text-slate-300 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullseye text-cyan-400 text-xs"></i>
+                        <span>Meta de Días</span>
+                    </span>
+                    <button id="btnSetGoal" class="text-[9px] bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-lg transition cursor-pointer">
+                        Establecer Meta
+                    </button>
+                </div>
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <span id="goalProgressText" class="text-slate-400 text-[11px]">Progreso: 0 / Sin meta</span>
+                    <span id="goalPercentageText" class="text-cyan-400 font-semibold number-font">0%</span>
+                </div>
+                <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div id="goalProgressBar" class="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-slate-900/30 border border-white/5 rounded-2xl space-y-1.5">
+                <div class="flex items-center justify-between text-[10px]">
+                    <span class="text-slate-300 font-medium">Fuerza del Hábito</span>
+                        <span id="statHabitLevelText" class="text-cyan-400 font-semibold">Semilla</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div id="statHabitBar" class="h-full bg-gradient-to-r from-cyan-500 to-indigo-400 rounded-full transition-all duration-700" style="width: 5%"></div>
+                    </div>
+                    <span id="statHabitSubtext" class="text-[9px] text-slate-400 block italic">Construyendo neuroplasticidad.</span>
+                </div>
+
+                <div class="p-3 bg-slate-900/30 border border-white/5 rounded-2xl space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] text-slate-400 uppercase font-semibold">Presencia (60 Días)</span>
+                        <span id="statActiveCount" class="text-[9px] text-slate-400">0 días</span>
+                    </div>
+                    <div id="heatmapContainer" class="grid grid-cols-12 gap-1 pt-1"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="w-full max-w-md mx-auto px-4 safe-pb relative z-20 shrink-0">
+        <div class="flex items-center justify-around py-2.5 px-3 rounded-2xl glass-panel border border-white/10 shadow-2xl">
+            <button id="navBtnCounter" class="nav-tab-btn active flex flex-col items-center gap-1 text-cyan-400 transition cursor-pointer">
+                <i class="fa-solid fa-compass text-base"></i>
+                <span class="text-[9px] font-semibold">Inicio</span>
+            </button>
+            <button id="navBtnCalendar" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-500 transition cursor-pointer">
+                <i class="fa-regular fa-calendar-days text-base"></i>
+                <span class="text-[9px] font-semibold">Calendario</span>
+            </button>
+            <button id="navBtnStats" class="nav-tab-btn flex flex-col items-center gap-1 text-slate-500 transition cursor-pointer">
+                <i class="fa-solid fa-chart-pie text-base"></i>
+                <span class="text-[9px] font-semibold">Progreso</span>
+            </button>
+            <button id="btnOpenBackup" class="flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300 transition cursor-pointer">
+                <i class="fa-solid fa-database text-base"></i>
+                <span class="text-[9px] font-semibold">Respaldo</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="streaksModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl hidden flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+        <div class="glass-panel border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop-in">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-semibold text-white">Mis Hábitos y Metas</h3>
+                </div>
+                <button id="btnCloseStreaks" class="text-slate-400 p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="streaksList" class="space-y-2 max-h-48 overflow-y-auto mb-3"></div>
+            <div class="pt-2 border-t border-white/5 space-y-2">
+                <input id="newStreakInput" type="text" placeholder="Ej. Meditación, Lectura..." class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none">
+                <button id="btnAddStreak" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs rounded-xl transition shadow-lg flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-plus text-[10px]"></i>
+                    <span>Crear Meta</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="themeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl hidden flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+        <div class="glass-panel border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 max-w-xs w-full shadow-2xl animate-pop-in">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-palette text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-semibold text-white">Aura del Hábito</h3>
+                </div>
+                <button id="btnCloseTheme" class="text-slate-400 p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="themeOptionsGrid" class="grid grid-cols-2 gap-2"></div>
+        </div>
+    </div>
+
+    <div id="reflectionModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl hidden flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+        <div class="glass-panel border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 max-w-sm w-full shadow-2xl animate-pop-in space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-feather text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-semibold text-white">Reflexión Diaria</h3>
+                </div>
+                <button id="btnCloseReflection" class="text-slate-400 p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-[11px] text-slate-400">¿Qué has aprendido hoy en tu camino?</p>
+            <textarea id="reflectionInput" rows="3" placeholder="Escribe tus notas aquí..." class="w-full bg-slate-900/80 border border-white/10 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 outline-none resize-none"></textarea>
+            <div class="flex gap-2">
+                <button id="btnSaveReflection" class="flex-1 py-2 bg-cyan-500 text-slate-950 font-semibold text-xs rounded-xl shadow-lg cursor-pointer">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl hidden flex items-center justify-center p-4 z-50">
+        <div class="glass-panel border border-white/10 rounded-3xl p-5 max-w-xs w-full shadow-2xl text-center animate-pop-in">
+            <div class="w-10 h-10 bg-white/5 text-slate-300 rounded-2xl flex items-center justify-center mx-auto mb-3 text-lg">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-white mb-1">¿Reiniciar racha?</h3>
+            <p class="text-[11px] text-slate-400 mb-4">Recomenzar es parte natural de la disciplina.</p>
+            <div class="flex gap-2">
+                <button id="btnCancelReset" class="flex-1 py-2 bg-white/5 text-slate-300 text-xs rounded-xl cursor-pointer">Volver</button>
+                <button id="btnConfirmReset" class="flex-1 py-2 bg-white text-slate-950 text-xs font-semibold rounded-xl cursor-pointer">Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetQuoteModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl hidden flex items-center justify-center p-4 z-50">
+        <div class="glass-panel border border-white/10 rounded-3xl p-5 max-w-sm w-full shadow-2xl text-center animate-pop-in">
+            <span id="resetQuoteBadge" class="inline-block px-2.5 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/10 text-[9px] font-medium uppercase mb-2">Nuevo Comienzo</span>
+            <h3 id="resetQuoteTitle" class="text-base font-light text-white mb-3">No te rindas</h3>
+            <div class="bg-slate-900/60 rounded-2xl p-3 border border-white/5 text-left mb-4">
+                <p id="resetQuoteText" class="text-slate-200 text-xs italic leading-relaxed mb-2">"Frase..."</p>
+                <div class="text-right">
+                    <span id="resetQuoteAuthor" class="text-xs font-semibold text-slate-300 block">— Autor</span>
+                    <span id="resetQuoteRole" class="text-[9px] text-slate-500 block">Pensador</span>
+                </div>
+            </div>
+            <button id="btnCloseResetQuote" class="w-full py-2.5 bg-white text-slate-950 font-semibold text-xs rounded-xl cursor-pointer">Continuar</button>
+        </div>
+    </div>
+
+    <div id="backupModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl hidden flex items-center justify-center p-4 z-50">
+        <div class="glass-panel border border-white/10 rounded-3xl p-5 max-w-xs w-full shadow-2xl text-center animate-pop-in space-y-3">
+            <h3 class="text-sm font-semibold text-white">Respaldo Privado</h3>
+            <div class="space-y-2 pt-1">
+                <button id="btnExportData" class="w-full py-2 bg-white/10 hover:bg-white/20 text-white font-medium text-xs rounded-xl flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-download text-[10px]"></i>
+                    <span>Exportar Copia (JSON)</span>
+                </button>
+                <label class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-300 font-medium text-xs rounded-xl flex items-center justify-center gap-2 border border-white/10 cursor-pointer">
+                    <i class="fa-solid fa-upload text-[10px]"></i>
+                    <span>Importar Copia</span>
+                    <input type="file" id="importFileInput" accept=".json" class="hidden">
+                </label>
+            </div>
+            <button id="btnCloseBackup" class="py-1 text-slate-500 text-xs block mx-auto cursor-pointer">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal: Establecer Meta -->
+    <div id="goalModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl hidden flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+        <div class="glass-panel border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 max-w-xs w-full shadow-2xl animate-pop-in space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-cyan-400 text-sm"></i>
+                    <h3 class="text-xs font-semibold text-white">Definir Tu Meta</h3>
+                </div>
+                <button id="btnCloseGoal" class="text-slate-400 p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-[11px] text-slate-400">¿Cuántos días continuos quieres proponerte como objetivo?</p>
+            <div class="space-y-2">
+                <input id="goalInput" type="number" min="1" max="9999" placeholder="Ej. 7, 21, 30, 100..." class="w-full bg-slate-900/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none number-font">
+                <button id="btnSaveGoal" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs rounded-xl transition shadow-lg flex items-center justify-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-check text-[10px]"></i>
+                    <span>Guardar Meta</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Celebración de Meta Cumplida -->
+    <div id="goalReachedModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-2xl hidden flex items-center justify-center p-4 z-50">
+        <div class="glass-panel border border-cyan-500/30 rounded-3xl p-6 max-w-sm w-full shadow-[0_0_50px_rgba(6,182,212,0.3)] text-center animate-pop-in relative overflow-hidden">
+            <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-500 text-slate-950 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg animate-bounce">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <span class="inline-block px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-semibold uppercase tracking-wider mb-2">
+                ¡Meta Alcanzada!
+            </span>
+            <h3 class="text-lg font-bold text-white mb-2">¡Felicitaciones por tu Logro!</h3>
+            <p id="goalReachedText" class="text-slate-300 text-xs leading-relaxed mb-5 italic">
+                "Has completado tu objetivo de días. Cada día cumplido es testimonio de tu fuerza interior y determinación."
+            </p>
+            <button id="btnCloseGoalReached" class="w-full py-3 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-bold text-xs rounded-2xl shadow-lg cursor-pointer transition active:scale-95">
+                ¡Continuar Creciendo!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const dailyQuotesDatabase = [
+            { quote: "Todo tiene su tiempo, y todo lo que se quiere debajo del cielo tiene su hora.", author: "Eclesiastés 3:1", role: "La Biblia" },
+            { quote: "El secreto para salir adelante es comenzar.", author: "Mark Twain", role: "Escritor" },
+            { quote: "No cuentes los días, haz que los días cuenten.", author: "Muhammad Ali", role: "Atleta Leyenda" },
+            { quote: "La constancia es la virtud por la cual todas las otras virtudes dan su fruto.", author: "Arturo Graf", role: "Poeta" },
+            { quote: "Cada mañana nacemos de nuevo. Lo que hacemos hoy es lo que más importa.", author: "Buda", role: "Maestro Espiritual" },
+            { quote: "El que tiene un porqué para vivir se puede enfrentar a todos los cómos.", author: "Friedrich Nietzsche", role: "Filósofo" },
+            { quote: "Somos lo que hacemos repetidamente. La excelencia, entonces, no es un acto, sino un hábito.", author: "Aristóteles", role: "Filósofo" },
+            { quote: "La felicidad depende de nosotros mismos.", author: "Epicteto", role: "Filósofo Estoico" }
+        ];
+
+        const resetQuotesDatabase = {
+            short: [
+                { title: "El Aprendizaje Inicial", quote: "No te preocupes por los fallos; preocúpate por las oportunidades que pierdes cuando ni siquiera lo intentas.", author: "Carol Dweck", role: "Psicóloga" },
+                { title: "La Paz de Empezar", quote: "El primer paso no te lleva a donde quieres ir, pero te saca de donde estás.", author: "Séneca", role: "Filósofo Estoico" },
+                { title: "Tu Propia Curva", quote: "El fracaso es simplemente la oportunidad de comenzar de nuevo, esta vez de forma más inteligente.", author: "Henry Ford", role: "Empresario" }
+            ],
+            medium: [
+                { title: "Reconstruir la Fuerza", quote: "Caerse siete veces y levantarse ocho.", author: "Proverbio Japonés", role: "Sabiduría Tradicional" },
+                { title: "El Valor Ganado", quote: "No has perdido el camino; simplemente has descubierto una forma que no funciona.", author: "Thomas Edison", role: "Inventor" },
+                { title: "Dominio Interior", quote: "La mayor gloria no es no caer nunca, sino levantarnos cada vez que caemos.", author: "Confucio", role: "Pensador" }
+            ],
+            long: [
+                { title: "Un Tropezón no Borra el Camino", quote: "Al hombre se le puede arrebatar todo salvo una cosa: la última de las libertades humanas, la elección de su actitud ante cualquier circunstancia.", author: "Viktor Frankl", role: "Psiquiatra" },
+                { title: "La Sabiduría Acumulada", quote: "No eres lo que te pasó, eres lo que decides ser.", author: "Carl Jung", role: "Psicoanalista" },
+                { title: "Constancia Inquebrantable", quote: "El roble más fuerte del bosque no es el que está protegido de la tormenta, sino el que se mantiene firme frente al viento.", author: "Søren Kierkegaard", role: "Filósofo" }
+            ]
+        };
+
+        const auraColorThemes = [
+            { id: 'cyan', name: 'Oasis Cian', ring: 'conic-gradient(from 0deg, #06b6d4, #3b82f6, #6366f1, #06b6d4)', glow: 'rgba(6, 182, 212, 0.35)', btnBg: 'linear-gradient(135deg, #0284c7, #2563eb)', status: 'Agua Serena', statusColor: '#67e8f9' },
+            { id: 'emerald', name: 'Flujo Esmeralda', ring: 'conic-gradient(from 0deg, #10b981, #06b6d4, #3b82f6, #10b981)', glow: 'rgba(16, 185, 129, 0.35)', btnBg: 'linear-gradient(135deg, #059669, #0284c7)', status: 'Brote Vital', statusColor: '#6ee7b7' },
+            { id: 'purple', name: 'Crepúsculo', ring: 'conic-gradient(from 0deg, #8b5cf6, #ec4899, #06b6d4, #8b5cf6)', glow: 'rgba(139, 92, 246, 0.35)', btnBg: 'linear-gradient(135deg, #7c3aed, #db2777)', status: 'Mente Serena', statusColor: '#c084fc' },
+            { id: 'amber', name: 'Sol Calmo', ring: 'conic-gradient(from 0deg, #f59e0b, #ef4444, #06b6d4, #f59e0b)', glow: 'rgba(245, 158, 11, 0.35)', btnBg: 'linear-gradient(135deg, #d97706, #dc2626)', status: 'Calidez Interior', statusColor: '#fcd34d' }
+        ];
+
+        class SoundEngine {
+            constructor() { this.ctx = null; this.enabled = true; }
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) this.ctx = new AudioCtx();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+            }
+            playWaterDrop() {
+                if (!this.enabled) return;
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } catch (e) {}
+            }
+        }
+
+        const soundEngine = new SoundEngine();
+
+        let appState = {
+            activeStreakId: "streak_1",
+            soundEnabled: true,
+            currentQuoteIndex: 0,
+            streaks: [{ id: "streak_1", title: "Mi Meta Principal", count: 0, startDate: null, maxStreak: 0, themeId: 'cyan', loggedDates: [], notes: {}, targetGoal: null }]
+        };
+
+        let currentCalendarDate = new Date();
+
+        const counterValue = document.getElementById('counterValue');
+        const counterTitle = document.getElementById('counterTitle');
+        const auraGradientBg = document.getElementById('auraGradientBg');
+        const auraGlowBack = document.getElementById('auraGlowBack');
+        const btnBgGradient = document.getElementById('btnBgGradient');
+        const streakStatus = document.getElementById('streakStatus');
+        const todayStatusBadge = document.getElementById('todayStatusBadge');
+        const todayStatusText = document.getElementById('todayStatusText');
+        const btnIncrementLabel = document.getElementById('btnIncrementLabel');
+        const currentStreakBadge = document.getElementById('currentStreakBadge');
+
+        function formatDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getActiveStreak() {
+            return appState.streaks.find(s => s.id === appState.activeStreakId) || appState.streaks[0];
+        }
+
+        function loadState() {
+            const savedState = localStorage.getItem('pazDayCounter_v2');
+            if (savedState) {
+                try { appState = Object.assign({}, appState, JSON.parse(savedState)); } catch (e) {}
+            }
+            soundEngine.enabled = appState.soundEnabled !== false;
+            updateSoundIcon();
+            updateDailyQuote();
+            updateUI();
+            renderCalendar();
+        }
+
+        function saveState() {
+            try { localStorage.setItem('pazDayCounter_v2', JSON.stringify(appState)); } catch (e) {}
+        }
+
+        function updateSoundIcon() {
+            const soundIcon = document.getElementById('soundIcon');
+            if (soundEngine.enabled) {
+                soundIcon.className = "fa-solid fa-volume-high text-cyan-300";
+            } else {
+                soundIcon.className = "fa-solid fa-volume-xmark text-slate-500";
+            }
+        }
+
+        function updateDailyQuote() {
+            const q = dailyQuotesDatabase[appState.currentQuoteIndex || 0];
+            document.getElementById('dailyQuoteText').textContent = `"${q.quote}"`;
+            document.getElementById('dailyQuoteAuthor').textContent = `— ${q.author} (${q.role})`;
+        }
+
+        function updateUI() {
+            const streak = getActiveStreak();
+            if (!streak) return;
+
+            counterValue.textContent = streak.count;
+            counterTitle.textContent = streak.title;
+            currentStreakBadge.textContent = streak.title;
+
+            const theme = auraColorThemes.find(t => t.id === streak.themeId) || auraColorThemes[0];
+            auraGradientBg.style.background = theme.ring;
+            auraGlowBack.style.backgroundColor = theme.glow;
+            btnBgGradient.style.background = theme.btnBg;
+            streakStatus.textContent = theme.status;
+            streakStatus.style.color = theme.statusColor;
+
+            const todayStr = formatDateKey(new Date());
+            const isLoggedToday = streak.loggedDates && streak.loggedDates.includes(todayStr);
+
+            if (isLoggedToday) {
+                todayStatusBadge.className = "mb-2 py-1 px-3 rounded-full text-[9px] font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-1.5";
+                todayStatusText.textContent = "¡Día de hoy registrado!";
+                btnIncrementLabel.textContent = "Día Registrado (+1)";
+            } else {
+                todayStatusBadge.className = "mb-2 py-1 px-3 rounded-full text-[9px] font-medium bg-white/5 border border-white/10 text-slate-400 flex items-center gap-1.5";
+                todayStatusText.textContent = "Hoy aún no has registrado progreso";
+                btnIncrementLabel.textContent = "Marcar Día (+1)";
+            }
+        }
+
+        const tabs = {
+            counter: { btn: document.getElementById('navBtnCounter'), view: document.getElementById('tabCounter') },
+            calendar: { btn: document.getElementById('navBtnCalendar'), view: document.getElementById('tabCalendar') },
+            stats: { btn: document.getElementById('navBtnStats'), view: document.getElementById('tabStats') }
+        };
+
+        function switchTab(activeTabKey) {
+            Object.keys(tabs).forEach(key => {
+                const isCurrent = key === activeTabKey;
+                tabs[key].view.classList.toggle('hidden', !isCurrent);
+                tabs[key].btn.classList.toggle('text-cyan-400', isCurrent);
+                tabs[key].btn.classList.toggle('text-slate-500', !isCurrent);
+            });
+
+            if (activeTabKey === 'calendar') renderCalendar();
+            if (activeTabKey === 'stats') renderStats();
+        }
+
+        tabs.counter.btn.addEventListener('click', () => switchTab('counter'));
+        tabs.calendar.btn.addEventListener('click', () => switchTab('calendar'));
+        tabs.stats.btn.addEventListener('click', () => switchTab('stats'));
+
+        function renderCalendar() {
+            const streak = getActiveStreak();
+            if (!streak) return;
+
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById('calendarMonthYear').textContent = `${monthNames[month]} ${year}`;
+
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayStr = formatDateKey(new Date());
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                calendarGrid.appendChild(document.createElement('div'));
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = formatDateKey(new Date(year, month, day));
+                const dayCell = document.createElement('div');
+                const isLogged = streak.loggedDates && streak.loggedDates.includes(dateStr);
+                const isToday = (dateStr === todayStr);
+
+                dayCell.className = `h-8 flex flex-col items-center justify-center rounded-xl transition text-slate-400 font-medium cursor-pointer relative text-xs ${
+                    isLogged ? 'calendar-day-active' : 'hover:bg-white/10'
+                } ${isToday ? 'calendar-day-today' : ''}`;
+
+                dayCell.innerHTML = `<span>${day}</span>`;
+                dayCell.addEventListener('click', () => {
+                    if (!streak.loggedDates) streak.loggedDates = [];
+                    const idx = streak.loggedDates.indexOf(dateStr);
+                    if (idx > -1) {
+                        streak.loggedDates.splice(idx, 1);
+                        streak.count = Math.max(0, streak.count - 1);
+                    } else {
+                        streak.loggedDates.push(dateStr);
+                        streak.count++;
+                    }
+                    saveState();
+                    updateUI();
+                    renderCalendar();
+                });
+
+                calendarGrid.appendChild(dayCell);
+            }
+        }
+
+        function renderStats() {
+            const streak = getActiveStreak();
+            if (!streak) return;
+            const total = (streak.loggedDates || []).length;
+            document.getElementById('statTotalDays').textContent = total;
+            document.getElementById('statMaxStreak').textContent = `${streak.maxStreak || 0} d`;
+
+            // Update Goal Progress
+            const goalProgressText = document.getElementById('goalProgressText');
+            const goalPercentageText = document.getElementById('goalPercentageText');
+            const goalProgressBar = document.getElementById('goalProgressBar');
+
+            if (streak.targetGoal && streak.targetGoal > 0) {
+                const currentCount = streak.count || 0;
+                const percentage = Math.min(100, Math.round((currentCount / streak.targetGoal) * 100));
+                goalProgressText.textContent = `Progreso: ${currentCount} / ${streak.targetGoal} días`;
+                goalPercentageText.textContent = `${percentage}%`;
+                goalProgressBar.style.width = `${percentage}%`;
+            } else {
+                goalProgressText.textContent = `Progreso: ${streak.count || 0} / Sin meta`;
+                goalPercentageText.textContent = `0%`;
+                goalProgressBar.style.width = `0%`;
+            }
+
+            const heatmapContainer = document.getElementById('heatmapContainer');
+            heatmapContainer.innerHTML = '';
+            const today = new Date();
+            let activeCount = 0;
+            for (let i = 59; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(today.getDate() - i);
+                const dStr = formatDateKey(d);
+                const isLogged = streak.loggedDates && streak.loggedDates.includes(dStr);
+                if (isLogged) activeCount++;
+                const cell = document.createElement('div');
+                cell.className = `h-3 rounded-md ${isLogged ? 'bg-cyan-300 shadow-[0_0_8px_rgba(103,232,249,0.5)]' : 'bg-white/5'}`;
+                heatmapContainer.appendChild(cell);
+            }
+            document.getElementById('statActiveCount').textContent = `${activeCount} días`;
+
+            const levelText = document.getElementById('statHabitLevelText');
+            const habitBar = document.getElementById('statHabitBar');
+            if (streak.count < 7) {
+                levelText.textContent = "Semilla";
+                habitBar.style.width = `${Math.max(10, streak.count * 12)}%`;
+            } else if (streak.count < 21) {
+                levelText.textContent = "Brote Vital";
+                habitBar.style.width = "50%";
+            } else if (streak.count < 60) {
+                levelText.textContent = "Río en Fluidez";
+                habitBar.style.width = "80%";
+            } else {
+                levelText.textContent = "Arraigo Inquebrantable";
+                habitBar.style.width = "100%";
+            }
+        }
+
+        document.getElementById('btnIncrement').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            const todayStr = formatDateKey(new Date());
+            if (!streak.loggedDates) streak.loggedDates = [];
+            if (!streak.loggedDates.includes(todayStr)) {
+                streak.loggedDates.push(todayStr);
+                streak.count++;
+                if (streak.count > streak.maxStreak) streak.maxStreak = streak.count;
+                soundEngine.playWaterDrop();
+
+                // Check Goal Achievement
+                if (streak.targetGoal && streak.count === streak.targetGoal) {
+                    document.getElementById('goalReachedText').textContent = `¡Has alcanzado tu objetivo de ${streak.targetGoal} días en "${streak.title}"! Tu perseverancia y paz interior han dado grandes frutos.`;
+                    document.getElementById('goalReachedModal').classList.remove('hidden');
+                }
+            }
+            saveState();
+            updateUI();
+        });
+
+        document.getElementById('btnRefreshQuote').addEventListener('click', () => {
+            appState.currentQuoteIndex = (appState.currentQuoteIndex + 1) % dailyQuotesDatabase.length;
+            updateDailyQuote();
+            saveState();
+        });
+
+        document.getElementById('btnToggleSound').addEventListener('click', () => {
+            soundEngine.enabled = !soundEngine.enabled;
+            appState.soundEnabled = soundEngine.enabled;
+            updateSoundIcon();
+            saveState();
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            document.getElementById('resetModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCancelReset').addEventListener('click', () => {
+            document.getElementById('resetModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnConfirmReset').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            const previousCount = streak.count;
+            streak.count = 0;
+            streak.loggedDates = [];
+            saveState();
+            updateUI();
+            
+            document.getElementById('resetModal').classList.add('hidden');
+            
+            let category = 'short';
+            if (previousCount >= 21) category = 'long';
+            else if (previousCount >= 6) category = 'medium';
+            
+            const quotes = resetQuotesDatabase[category];
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            
+            document.getElementById('resetQuoteBadge').textContent = `Tras ${previousCount} días — ${randomQuote.title}`;
+            document.getElementById('resetQuoteText').textContent = `"${randomQuote.quote}"`;
+            document.getElementById('resetQuoteAuthor').textContent = `— ${randomQuote.author}`;
+            document.getElementById('resetQuoteRole').textContent = randomQuote.role;
+            document.getElementById('resetQuoteModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseResetQuote').addEventListener('click', () => {
+            document.getElementById('resetQuoteModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnOpenStreaks').addEventListener('click', () => {
+            renderStreaksList();
+            document.getElementById('streaksModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseStreaks').addEventListener('click', () => {
+            document.getElementById('streaksModal').classList.add('hidden');
+        });
+
+        function renderStreaksList() {
+            const list = document.getElementById('streaksList');
+            list.innerHTML = '';
+            appState.streaks.forEach(s => {
+                const item = document.createElement('div');
+                const isActive = s.id === appState.activeStreakId;
+                item.className = `p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition ${
+                    isActive ? 'bg-cyan-500/10 border-cyan-500/30 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:text-white'
+                }`;
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-xs ${isActive ? 'text-cyan-400' : 'text-slate-500'}"></i>
+                        <span class="text-xs font-medium">${s.title}</span>
+                    </div>
+                    <span class="text-xs number-font font-light">${s.count} d</span>
+                `;
+                item.addEventListener('click', () => {
+                    appState.activeStreakId = s.id;
+                    saveState();
+                    updateUI();
+                    renderStreaksList();
+                });
+                list.appendChild(item);
+            });
+        }
+
+        document.getElementById('btnAddStreak').addEventListener('click', () => {
+            const input = document.getElementById('newStreakInput');
+            const val = input.value.trim();
+            if (val) {
+                const newId = `streak_${Date.now()}`;
+                appState.streaks.push({ id: newId, title: val, count: 0, startDate: new Date().toISOString(), maxStreak: 0, themeId: 'cyan', loggedDates: [], notes: {}, targetGoal: null });
+                appState.activeStreakId = newId;
+                input.value = '';
+                saveState();
+                updateUI();
+                renderStreaksList();
+            }
+        });
+
+        document.getElementById('btnSetGoal').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            document.getElementById('goalInput').value = streak.targetGoal || '';
+            document.getElementById('goalModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseGoal').addEventListener('click', () => {
+            document.getElementById('goalModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnSaveGoal').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            const val = parseInt(document.getElementById('goalInput').value, 10);
+            if (!isNaN(val) && val > 0) {
+                streak.targetGoal = val;
+            } else {
+                streak.targetGoal = null;
+            }
+            saveState();
+            renderStats();
+            document.getElementById('goalModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnCloseGoalReached').addEventListener('click', () => {
+            document.getElementById('goalReachedModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnOpenThemePicker').addEventListener('click', () => {
+            renderThemePicker();
+            document.getElementById('themeModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseTheme').addEventListener('click', () => {
+            document.getElementById('themeModal').classList.add('hidden');
+        });
+
+        function renderThemePicker() {
+            const grid = document.getElementById('themeOptionsGrid');
+            grid.innerHTML = '';
+            const streak = getActiveStreak();
+            auraColorThemes.forEach(t => {
+                const isSelected = streak.themeId === t.id;
+                const btn = document.createElement('button');
+                btn.className = `p-2 rounded-xl border flex flex-col items-center gap-1.5 transition ${
+                    isSelected ? 'bg-white/10 border-cyan-400 text-white' : 'bg-white/5 border-white/5 text-slate-400 hover:text-white'
+                }`;
+                btn.innerHTML = `
+                    <div class="w-6 h-6 rounded-full" style="background: ${t.ring}"></div>
+                    <span class="text-[10px] font-medium">${t.name}</span>
+                `;
+                btn.addEventListener('click', () => {
+                    streak.themeId = t.id;
+                    saveState();
+                    updateUI();
+                    renderThemePicker();
+                });
+                grid.appendChild(btn);
+            });
+        }
+
+        document.getElementById('btnOpenReflection').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            const todayStr = formatDateKey(new Date());
+            document.getElementById('reflectionInput').value = (streak.notes && streak.notes[todayStr]) || '';
+            document.getElementById('reflectionModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseReflection').addEventListener('click', () => {
+            document.getElementById('reflectionModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnSaveReflection').addEventListener('click', () => {
+            const streak = getActiveStreak();
+            const todayStr = formatDateKey(new Date());
+            if (!streak.notes) streak.notes = {};
+            streak.notes[todayStr] = document.getElementById('reflectionInput').value;
+            saveState();
+            document.getElementById('reflectionModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnPrevMonth').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('btnNextMonth').addEventListener('click', () => {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        document.getElementById('btnTodayMonth').addEventListener('click', () => {
+            currentCalendarDate = new Date();
+            renderCalendar();
+        });
+
+        document.getElementById('btnOpenBackup').addEventListener('click', () => {
+            document.getElementById('backupModal').classList.remove('hidden');
+        });
+
+        document.getElementById('btnCloseBackup').addEventListener('click', () => {
+            document.getElementById('backupModal').classList.add('hidden');
+        });
+
+        document.getElementById('btnExportData').addEventListener('click', () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `paz_backup_${formatDateKey(new Date())}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        });
+
+        document.getElementById('importFileInput').addEventListener('change', (event) => {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    if (importedState && importedState.streaks) {
+                        appState = importedState;
+                        saveState();
+                        updateUI();
+                        renderCalendar();
+                        document.getElementById('backupModal').classList.add('hidden');
+                    }
+                } catch (err) {}
+            };
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0]);
+            }
+        });
+
+        counterTitle.addEventListener('blur', () => {
+            const streak = getActiveStreak();
+            streak.title = counterTitle.textContent.trim() || "Mi Meta";
+            saveState();
+            updateUI();
+        });
+
+        window.onload = function() {
+            loadState();
+        };
+    </script>
+</body>
+</html>
